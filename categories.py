@@ -24,11 +24,15 @@ class Category:
             self.window.addstr(self.line, column, "-", curses.color_pair(self.color))
 
     def display(self) -> int:
-        self.draw_separation()
-        self.window.addstr(self.line + 1, 0, self.name, curses.color_pair(self.color))
+        
+        lines, _ = self.window.getmaxyx()
+        if self.line  >= 0:
+            self.draw_separation()
+            self.window.addstr(self.line + 1, 0, self.name, curses.color_pair(self.color))
         x = 0
         for i, line in enumerate(self.content.split("\n")):
-            self.window.addstr(self.line + i + 2, 0, line, curses.color_pair(self.color))
+            if self.line + i + 2 >= 0 and self.line + i + 2 < lines:
+                self.window.addstr(self.line + i + 2, 0, line, curses.color_pair(self.color))
             x = i
         return self.line + x + 2
 
@@ -44,7 +48,13 @@ class Category:
         lines = self.content.split("\n")
         line = len(lines) + 1 + self.line
         column = len(lines[-1]) 
-        return line, column 
+        if line >= self.window.getmaxyx()[0]:
+            return self.window.getmaxyx()
+        return min(line,self.window.getmaxyx()[0] - 1) , column 
+
+    def get_number_of_lines(self) -> int:
+        return len(self.content.split("\n"))
+
 
     def clear_content(self) -> None:
         self.content = ""

@@ -14,6 +14,13 @@ class Command_reader:
         result : str = ""
         y, _ = categories["JDB interaction"].get_position_to_write()
         line, column = categories["JDB interaction"].get_position_to_write()
+        if line == stdscr.getmaxyx()[0]:
+            line -= 1
+            y -= 1
+            for col in range(column):
+                stdscr.move(line, col)
+                stdscr.delch()
+            column = 5
         index : int = 0
         current_history_position : int = len(self.history) - 1
         tmp_command : str = ""
@@ -80,6 +87,10 @@ class Command_reader:
             return "next"
         if cmd == "c":
             return "cont"
+        if cmd == "s":
+            return "step"
+        if cmd == "l":
+            return "list"
         return cmd
 
 
