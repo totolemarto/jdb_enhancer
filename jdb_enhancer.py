@@ -99,7 +99,8 @@ def parse_arg() -> dict[str, list[str] | str]:
     arguments = ArgumentParser(prog = "my_jdb", usage='%(prog)s [options] [file] [argument of the file]')
     arguments.add_argument('Java_file_to_debug', type=str, help='A required string positional argument for the file to debug')
     arguments.add_argument('Java_arguments', nargs='*',  help='Optional positional argument for the java file')
-    arguments.add_argument('-sourcepath', nargs="?", type=str, help= "directories in which to look for source files")
+    arguments.add_argument('-sourcepath', nargs="?", type=str, help= "directories in which to look for source files, separated by ':'")
+    arguments.add_argument('-classpath', nargs="?", type=str, help= "directories in which to look for class files, separated by ':'")
     return vars(arguments.parse_args())
 
 

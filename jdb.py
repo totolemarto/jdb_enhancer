@@ -4,6 +4,7 @@ import pty
 from os import read
 import subprocess 
 from time import sleep
+from typing import cast
 
 class Jdb_class:
     
@@ -13,8 +14,20 @@ class Jdb_class:
 
     def __init__(self, args : dict [str, list[str] | str]):
         self.input_stream, self.output_stream = pty.openpty()
+        
+        cmd = ["jdb"]
+
+        if args.get("classpath"):
+            cmd += ["-classpath", cast(str, args["classpath"])]
+        if args.get("sourcepath"):
+            cmd += ["-sourcepath", cast(str, args["sourcepath"])]
+
+        cmd += [cast(str, args["Java_file_to_debug"])]
+        if args.get("Java_arguments"):
+            cmd += [cast(str, args["Java_arguments"])]
+
         self.jdb = subprocess.Popen(
-            ["jdb", args["Java_file_to_debug"]],
+            cmd, 
             stdin = subprocess.PIPE,
             stdout = self.output_stream,
             stderr = self.output_stream,
