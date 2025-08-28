@@ -21,7 +21,8 @@ class Command_reader:
                 "n" : "next",
                 "c" : "cont",
                 "s" : "step",
-                "l" : "list"
+                "l" : "list",
+                "r" : "run"
                 }
         if not path.exists("jdb_shortcut.txt"):
             return
@@ -45,15 +46,15 @@ class Command_reader:
 
     def get_input_from_user(self, stdscr, categories : dict[str, Category]) -> str:
         result : str = ""
-        y, _ = categories["JDB interaction"].get_position_to_write()
         line, column = categories["JDB interaction"].get_position_to_write()
-        if line == stdscr.getmaxyx()[0]:
+        if line == stdscr.getmaxyx()[0]: # number of line in terminal
             line -= 1
-            y -= 1
-            for col in range(column):
-                stdscr.move(line, col)
-                stdscr.delch()
+            stdscr.move(line, 0)
+            stdscr.clrtoeol()
             column = 5
+            stdscr.move(line, column)
+            stdscr.refresh()
+
         index : int = 0
         current_history_position : int = len(self.history) - 1
         tmp_command : str = ""
@@ -67,7 +68,7 @@ class Command_reader:
                 if index > 0:
                     result = result[0:index - 1] + result[index:]
                     index -= 1
-                    stdscr.move(y, index + column)
+                    stdscr.move(line, index + column)
                     stdscr.delch()
 
             elif key == curses.KEY_LEFT:
@@ -95,7 +96,7 @@ class Command_reader:
                  
             elif key == curses.KEY_DC:
                 result = result[0:index ] + result[index + 1:]
-                stdscr.move(y, index + column)
+                stdscr.move(line, index + column)
                 stdscr.delch()
 
             else:
@@ -103,7 +104,7 @@ class Command_reader:
                 index += 1
 
             stdscr.addstr(line, column, result )
-            stdscr.move(y, index  + column)
+            stdscr.move(line, index  + column)
         if self.shortcuts.get(result):
             result = self.shortcuts[result]
         if result == "":

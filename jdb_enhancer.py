@@ -13,9 +13,7 @@ from argparse import ArgumentParser, Namespace
 
 def display_category(stdscr, categories : dict[str, Category]) -> None:
     lines, _ = stdscr.getmaxyx()
-    tot : int = 0
-    for value in categories.values():
-        tot += value.get_number_of_lines()
+    tot : int = sum(value.get_number_of_lines() for value in categories.values())
     stdscr.clear()
     if tot >= lines:
         categories["JDB interaction"].line = lines - categories["JDB interaction"].get_number_of_lines()
