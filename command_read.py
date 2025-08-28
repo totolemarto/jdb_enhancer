@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 PRATS Tommy 
 from categories import Category
 import curses
 from os import path

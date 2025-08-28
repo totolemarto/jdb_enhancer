@@ -1,4 +1,8 @@
 #!/bin/python3
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 PRATS Tommy 
+
+
 
 from jdb import Jdb_class
 from categories import Category

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2025 PRATS Tommy 
 import pty
 from os import read
 import subprocess 
