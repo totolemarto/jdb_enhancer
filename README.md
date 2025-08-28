@@ -6,7 +6,7 @@ Here an exemple of how it looks like for the moment:
 
     * Display result of list ( source code ), stop ( different breakpoints ), locals ( variables in this frame ) whitout request from user continuous
     * Manage an history of command allow to naviguate througt it with arrows
-    * Creat shortcuts for most use commands ( next, step, cont )
+    * Create shortcuts for most use commands ( next, step, cont )
     * Let user manage his shortcuts with a file to create special shortcuts for different project.
 
 # WIP Feature
@@ -22,6 +22,7 @@ key & value
 ```
 with one pair by line.
 The file must be in the same directory where you run the debugger. This allow you to have differents shortcuts for different projects
+[Here an exemple](jdb_enhancer/jdb_shortcut.txt)
 
 # How to use
 
