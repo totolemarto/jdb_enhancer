@@ -92,16 +92,11 @@ options forwarded to debuggee process if launched by jdb (shorthand instead of u
 """
 
 def parse_arg() -> dict[str, list[str] | str]:
-    curses.endwin()
     arguments = ArgumentParser(prog = "my_jdb", usage='%(prog)s [options] [file] [argument of the file]')
     arguments.add_argument('Java_file_to_debug', type=str, help='A required string positional argument for the file to debug')
     arguments.add_argument('Java_arguments', nargs='*',  help='Optional positional argument for the java file')
     arguments.add_argument('-sourcepath', nargs="?", type=str, help= "directories in which to look for source files")
-    args = arguments.parse_args()
-    print(vars(args))
-    print(args)
-    print("hey")
-    return vars(args)
+    return vars(arguments.parse_args())
 
 
 def main(stdscr) -> None:
@@ -112,9 +107,6 @@ def main(stdscr) -> None:
     categories : dict[str, Category] = init_categories(stdscr, Jdb)
 
     categories["JDB interaction"].add_content(Jdb.read_until_prompt(wait=False) + " ")
-
-    #categories["JDB interaction"].add_content(Jdb.send_command("stop at Test.Main.coucou"))
-    #categories["JDB interaction"].add_content(Jdb.send_command("run"))
     update_categories(categories)
     display_category(stdscr, categories)
     cmd : str = ""
