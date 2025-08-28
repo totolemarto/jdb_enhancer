@@ -1,14 +1,45 @@
 from categories import Category
 import curses
+from os import path
+from sys import stderr
 
 class Command_reader:
 
     history : list[str]
     current : str
+    shortcuts : dict [str, str]
 
     def __init__(self):
         self.history = []
         self.current = ""
+        self.read_shortcut()
+
+    def read_shortcut(self) -> None:
+        self.shortcuts = {
+                "n" : "next",
+                "c" : "cont",
+                "s" : "step",
+                "l" : "list"
+                }
+        if not path.exists("jdb_shortcut.txt"):
+            return
+        with open("jdb_shortcut.txt", "r") as f:
+            content = f.read()
+        content = content.split("\n")
+        for line_number, line in enumerate(content):
+            if line == "":
+                continue
+            try:
+                key, value = line.split("&")
+            except:
+                curses.endwin()
+                print(f"wrong shortcut line found at line number {line_number + 1}.\nFormat exepected : key & value. Found {line}.\nActual shortcuts found : {self.shortcuts}.\n{content=}", file=stderr)
+                exit(1)
+            while key.endswith(" "):
+                key = key.removesuffix(" ")
+            while value[0] == " ":
+                value = value.removeprefix(" ")
+            self.shortcuts[key] = value
 
     def get_input_from_user(self, stdscr, categories : dict[str, Category]) -> str:
         result : str = ""
@@ -71,7 +102,8 @@ class Command_reader:
 
             stdscr.addstr(line, column, result )
             stdscr.move(y, index  + column)
-        result = self.__parse_result(result)
+        if self.shortcuts.get(result):
+            result = self.shortcuts[result]
         if result == "":
             if len(self.history) != 0:
                 result = self.history[-1]
@@ -81,17 +113,3 @@ class Command_reader:
             self.history.append(result)
 
         return result
-
-    def __parse_result(self, cmd : str) -> str:
-        if cmd == "n":
-            return "next"
-        if cmd == "c":
-            return "cont"
-        if cmd == "s":
-            return "step"
-        if cmd == "l":
-            return "list"
-        return cmd
-
-
-

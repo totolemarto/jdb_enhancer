@@ -2,16 +2,17 @@ import pty
 from os import read
 import subprocess 
 from time import sleep
+
 class Jdb_class:
     
     input_stream : int
     output_stream : int
     jdb : subprocess.Popen
 
-    def __init__(self, file_to_debug : str):
+    def __init__(self, args : dict [str, list[str] | str]):
         self.input_stream, self.output_stream = pty.openpty()
         self.jdb = subprocess.Popen(
-            ["jdb", file_to_debug],
+            ["jdb", args["Java_file_to_debug"]],
             stdin = subprocess.PIPE,
             stdout = self.output_stream,
             stderr = self.output_stream,

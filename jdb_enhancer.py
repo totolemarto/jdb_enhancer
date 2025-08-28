@@ -5,6 +5,7 @@ from categories import Category
 from command_read import Command_reader
 import curses
 from sys import argv
+from argparse import ArgumentParser, Namespace
 
 def display_category(stdscr, categories : dict[str, Category]) -> None:
     lines, _ = stdscr.getmaxyx()
@@ -53,15 +54,67 @@ def init_categories(stdscr, Jdb : Jdb_class) -> dict[str, Category]:
     result["JDB interaction"] = Category("JDB interaction", "list", 8, Jdb, stdscr, 4)
     return result
 
+"""
+Usage: jdb <options> <class> <arguments>
+
+where options include:
+    -? -h --help -help print this help message and exit
+    -sourcepath <directories separated by ":">
+                      directories in which to look for source files
+    -attach <address>
+                      attach to a running VM at the specified address using standard connector
+    -listen <address>
+                      wait for a running VM to connect at the specified address using standard connector
+    -listenany
+                      wait for a running VM to connect at any available address using standard connector
+    -launch
+                      launch VM immediately instead of waiting for 'run' command
+    -listconnectors   list the connectors available in this VM
+    -connect <connector-name>:<name1>=<value1>,...
+                      connect to target VM using named connector with listed argument values
+    -dbgtrace [flags] print info for debugging jdb
+    -trackallthreads  Track all threads, including virtual threads.
+    -tclient          run the application in the HotSpot(TM) Client Compiler
+    -tserver          run the application in the HotSpot(TM) Server Compiler
+    -R<option>        forward <option> to debuggee process if launched by jdb, otherwise ignored
+
+options forwarded to debuggee process if launched by jdb (shorthand instead of using -R):
+    -v -verbose[:class|gc|jni]
+                      turn on verbose mode
+    -D<name>=<value>  set a system property
+    -classpath <directories separated by ":">
+                      list directories in which to look for classes
+    -X<option>        non-standard target VM option
+
+<class> is the name of the class to begin debugging
+<arguments> are the arguments passed to the main() method of <class>
+
+"""
+
+def parse_arg() -> dict[str, list[str] | str]:
+    curses.endwin()
+    arguments = ArgumentParser(prog = "my_jdb", usage='%(prog)s [options] [file] [argument of the file]')
+    arguments.add_argument('Java_file_to_debug', type=str, help='A required string positional argument for the file to debug')
+    arguments.add_argument('Java_arguments', nargs='*',  help='Optional positional argument for the java file')
+    arguments.add_argument('-sourcepath', nargs="?", type=str, help= "directories in which to look for source files")
+    args = arguments.parse_args()
+    print(vars(args))
+    print(args)
+    print("hey")
+    return vars(args)
+
+
 def main(stdscr) -> None:
+    args : dict[str, list[str] | str] = parse_arg()
     init_curses()
-    Jdb : Jdb_class = Jdb_class(argv[1])
+    Jdb : Jdb_class = Jdb_class(args)
     command_reader : Command_reader = Command_reader()
     categories : dict[str, Category] = init_categories(stdscr, Jdb)
 
     categories["JDB interaction"].add_content(Jdb.read_until_prompt(wait=False) + " ")
-    categories["JDB interaction"].add_content(Jdb.send_command("stop at Test.Main.coucou"))
-    categories["JDB interaction"].add_content(Jdb.send_command("run"))
+
+    #categories["JDB interaction"].add_content(Jdb.send_command("stop at Test.Main.coucou"))
+    #categories["JDB interaction"].add_content(Jdb.send_command("run"))
     update_categories(categories)
     display_category(stdscr, categories)
     cmd : str = ""
@@ -75,11 +128,5 @@ def main(stdscr) -> None:
     Jdb.terminate()
     exit()
 
-def usage() -> None:
-    print(f"usage : python3 {argv[0]} <file to debug>")
-
 if __name__ == "__main__":
-    if len(argv) != 2:
-        usage()
-        exit()
     curses.wrapper(main)
