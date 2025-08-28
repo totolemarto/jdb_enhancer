@@ -1,3 +1,5 @@
+#!/bin/python3
+
 from jdb import Jdb_class
 from categories import Category
 from command_read import Command_reader

@@ -13,8 +13,17 @@ Here an exemple of how it looks like for the moment:
     * Let user manage his shortcuts with a file to create special shortcuts for different project.
     * Create interaction whith python to select in flight which informations to display
     
+# How to use
 
 To run the code 
+``` bash
+    python3 jdb_enhancer.py <File to debug>
 ```
-    python3 Main.py <File to debug>
+
+If you want to access the script from everywhere in your computer 
+
+``` bash
+    chmod +x jdb_enhancer.py
+    sudo ln -s <absolute path of jdb_enhancer.py> /usr/local/bin
 ```
+with this command you can run it from everywhere ( ensure /usr/local/bin ) is in your PATH
