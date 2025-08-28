@@ -7,12 +7,22 @@ Here an exemple of how it looks like for the moment:
     * Display result of list ( source code ), stop ( different breakpoints ), locals ( variables in this frame ) whitout request from user continuous
     * Manage an history of command allow to naviguate througt it with arrows
     * Creat shortcuts for most use commands ( next, step, cont )
+    * Let user manage his shortcuts with a file to create special shortcuts for different project.
 
 # WIP Feature
 
-    * Let user manage his shortcuts with a file to create special shortcuts for different project.
     * Create interaction whith python to select in flight which informations to display
-    
+    * Send all possible argument for jdb directly with jdb_enhancer like 'classpath'
+   
+# Create shortcut in a project
+
+To create your personnal shortcut, you need to create a file named "jdb_shortcut.txt" and follow this style:
+```
+key & value
+```
+with one pair by line.
+The file must be in the same directory where you run the debugger. This allow you to have differents shortcuts for different projects
+
 # How to use
 
 To run the code 
