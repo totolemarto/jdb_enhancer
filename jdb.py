@@ -24,7 +24,8 @@ class Jdb_class:
 
         cmd += [cast(str, args["Java_file_to_debug"])]
         if args.get("Java_arguments"):
-            cmd += [cast(str, args["Java_arguments"])]
+            for arg in args["Java_arguments"]:
+                cmd += [arg]
 
         self.jdb = subprocess.Popen(
             cmd, 
