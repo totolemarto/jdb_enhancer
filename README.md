@@ -22,7 +22,7 @@ key & value
 ```
 with one pair by line.
 The file must be in the same directory where you run the debugger. This allow you to have differents shortcuts for different projects
-[Here an exemple](jdb_enhancer/jdb_shortcut.txt)
+[Here an exemple](jdb_shortcut.txt)
 
 # How to use
 
